@@ -1,0 +1,9 @@
+.
+|-- indextree.py
+|-- test.txt
+|-- .idea
+|   |-- IndexTree.iml
+|   |-- workspace.xml
+|   |-- modules.xml
+|   |-- misc.xml
+|   |-- inspectionProfiles
