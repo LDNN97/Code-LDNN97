@@ -13,6 +13,50 @@ function calculate(f::f1, x::Float64)
     exp(-x)
 end
 
+function method1(f::integral_function, ε::Float64)
+    k = 1
+    len = f.ub - f.lb
+    T_k = (f.ub - f.lb) / 2. * (calculate(f, f.lb) + calculate(f, f.ub))
+    println(T_k)
+    while true
+        x = f.lb:(len/2.):f.ub
+        T_k1 = T_k / 2.
+        for i=2:2:length(x)
+            T_k1 += len / 2. * calculate(f, x[i])
+        end
+        if abs(T_k1 - T_k) < ε
+            return T_k1
+        end
+        T_k = T_k1
+        k += 1
+        len /= 2.
+    end
+end
+
+function method2(f::integral_function, ε::Float64)
+    h = f.ub - f.lb
+    T1 = h / 2 * (calculate(f, f.lb) + calculate(f, f.ub))
+    S1 = T1
+    n = 1
+    while true
+        tmp = 0
+        for i in 0:n-1
+            x = f.lb + (i + 0.5) * h
+            tmp += calculate(f, x)
+        end
+
+        T2 = (T1 + h * tmp) / 2
+        S2 = (4 * T2 - T1) / 3
+        if (abs(S2 - S1) <= ε)
+            return S2
+        end
+        T1 = T2
+        S1 = S2
+        n *= 2
+        h /= 2
+    end
+end
+
 function romberg(f::integral_function, ε::Float64)
     k = 1
     len = f.ub - f.lb
@@ -41,9 +85,8 @@ function romberg(f::integral_function, ε::Float64)
     end
 end
 
-a = f1(0, 1)
-
-using BenchmarkTools
-@time romberg(a, 0.00001)
-
+x = f1(0, 1)
+romberg(x, 0.00001)
+method1(x, 0.00001)
+method2(x, 0.00001)
 end  # module

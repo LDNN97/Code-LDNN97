@@ -8,4 +8,17 @@ for i in 1:length(st) - 2
     println(tot)
 end
 
+mutable struct my
+    a::Float32
+    b::Float32
+    my(x) = begin
+        y = x
+        y2 = x * 2
+        new(y, y2)
+    end
+end
+
+a = my(2)
+a.a
+a.b
 end # module
